@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaCubes } from "react-icons/fa";
 import axios from "../axios";
@@ -28,6 +28,21 @@ const Home = () => {
       }));
     }
   };
+
+  useEffect(() => {
+    if (deliveryCheck && formData.address !== "") {
+      setFormData((prev) => ({
+        ...prev,
+        deliveryAddress: formData.address,
+      }));
+    }
+    else{
+      setFormData((prev) => ({
+        ...prev,
+        deliveryAddress: "",
+      }));
+    }
+  }, [deliveryCheck]);
 
   const handleSubmit = () => {
     axios
@@ -268,7 +283,6 @@ const Home = () => {
     },
   ];
 
-  console.log("formData", formData);
 
   return (
     <div className="w-full h-screen text-[14px]">
@@ -296,7 +310,15 @@ const Home = () => {
                   />
                 )}
                 <span className="font-bold text-[12px]">{item.name}</span>
-                {item.name === "DELIVERY ADDRESS:" && <input type="checkbox" />}
+                {item.name === "DELIVERY ADDRESS:" && (
+                  <input
+                    type="checkbox"
+                    checked={deliveryCheck}
+                    onChange={(e) => {
+                      setDeliveryCheck(!deliveryCheck);
+                    }}
+                  />
+                )}
                 {item.type === "text_area" ? (
                   <textarea
                     name={item.value}
